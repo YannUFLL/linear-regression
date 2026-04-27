@@ -55,6 +55,7 @@ if __name__ == "__main__":
 
         delta0 = gradiant0 * learning_rate
         delta1 = gradiant1 * learning_rate 
+
         theta0 = theta0 - delta0
         theta1 = theta1 - delta1
         line.set_data(x_norm * x_scale, (theta0 + theta1 * x_norm) * y_scale)
@@ -70,4 +71,5 @@ if __name__ == "__main__":
     print("\nCoefficients for non-normalized inputs (for predict.py):")
     print("THETA0 =", theta0_real)
     print("THETA1 =", theta1_real)
+    plt.show()
 
