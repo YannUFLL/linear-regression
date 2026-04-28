@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
+import json
 
 ITERATION_NUMBER = 100
 LEARNING_RATE = 1.2
@@ -50,26 +51,28 @@ if __name__ == "__main__":
             error_sum += (theta0 + theta1 * x_norm[j] - y_norm[j])
             weighted_error_sum += (theta0 + theta1 * x_norm[j] - y_norm[j]) * x_norm[j]
 
-        gradiant0 = error_sum / len(x)
-        gradiant1 = weighted_error_sum / len(x)
+        der_theta0 = error_sum / len(x)
+        der_theta1 = weighted_error_sum / len(x)
 
-        delta0 = gradiant0 * learning_rate
-        delta1 = gradiant1 * learning_rate 
+        step0 = der_theta0 * learning_rate
+        step1 = der_theta1 * learning_rate 
 
-        theta0 = theta0 - delta0
-        theta1 = theta1 - delta1
+        theta0 = theta0 - step0
+        theta1 = theta1 - step1
         line.set_data(x_norm * x_scale, (theta0 + theta1 * x_norm) * y_scale)
         fig.canvas.draw_idle()
-        plt.pause(0.001)
+        plt.pause(0.1)
 
     plt.ioff()
     theta0_real = theta0 * y_scale
     theta1_real = theta1 * (y_scale / x_scale)
 
-    print("Normalized coefficients:")
-    print("theta0_norm:", theta0, "theta1_norm:", theta1)
-    print("\nCoefficients for non-normalized inputs (for predict.py):")
-    print("THETA0 =", theta0_real)
-    print("THETA1 =", theta1_real)
+    thetas = {
+        "theta0": theta0_real,
+        "theta1": theta1_real,
+    }
+    with open("thetas.json", "w") as thetas_file:
+        json.dump(thetas, thetas_file, indent=4)
+    print("\nCoefficients successfully compute and write inside thetas.json:")
     plt.show()
 

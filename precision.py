@@ -1,31 +1,43 @@
 import numpy as np
 import sys
+import json 
 
+if __name__ == "__main__":
 
-THETA0 = 8472.47449422059
-THETA1 = -0.02119103328839867
+    with open("thetas.json", "r") as thetas_file: 
+        thetas = json.load(thetas_file)
 
-data = np.loadtxt("data.csv", skiprows=1,delimiter=",")
-x = data[:, 0]
-y = data[:, 1]
+    theta0 = thetas["theta0"]
+    theta1 = thetas["theta1"]
+    data = np.loadtxt("data.csv", skiprows=1,delimiter=",")
+    x = data[:, 0]
+    y = data[:, 1]
 
-predict = THETA0 + THETA1 * x
+    predict = theta0 + theta1 * x
 
+    # determination coefficient (R2)
 
-# determination coefficient (R2)
+    ss_res = np.sum((y - predict)**2)
+    ss_tot = np.sum((y - np.mean(y))**2)
+    r2 = 1 - ss_res / ss_tot
 
-ss_res = np.sum((y - predict)**2)
-ss_tot = np.sum((y - np.mean(y))**2)
-r2 = 1 - ss_res / ss_tot
+    # Mean absolute error
 
-# Mean absolute error
+    mae = 1 / len(y) * np.sum(np.abs((y - predict)))
 
-mae = 1 / len(y) * np.sum(np.abs((y - predict)))
+    # Mean absolute percentage error
 
-# Mean absolute percentage error
+    mape = 100 / len(y) * np.sum(np.abs((y - predict)/y))
 
-mape = 100 / len(y) * np.sum(np.abs((y - predict)/y))
+    # Mean squared error 
 
-print(f"R2 Score: {r2}")
-print(f"Mean absolute error: {mae:.2f}")
-print(f"Mean absolute percentage error: {mape:.2f}")
+    mse = np.mean((y - predict)**2)
+
+    # Root mean squared error
+
+    rmse = np.sqrt(mse)
+
+    print(f"R2 Score: {r2}")
+    print(f"Mean absolute error: {mae:.2f}")
+    print(f"Root mean squared error: {rmse:.2f}")
+    print(f"Mean absolute percentage error: {mape:.2f}")

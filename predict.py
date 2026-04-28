@@ -1,11 +1,13 @@
-
 import sys 
-
-THETA0 = 8472.47449422059
-THETA1 = -0.02119103328839867
+import json
 
 if __name__ == "__main__":
+    
     try: 
+        with open("thetas.json", "r") as thetas_file: 
+            thetas = json.load(thetas_file)
+        theta0 = thetas["theta0"]
+        theta1 = thetas["theta1"]
         if len(sys.argv) > 1:
             line = sys.argv[1]
         else: 
@@ -13,7 +15,7 @@ if __name__ == "__main__":
         km = float(line)
         if km < 0:
             raise ValueError
-        estimated_price = max(0, THETA0 + THETA1 * km)
+        estimated_price = max(0, theta0 + theta1 * km)
         print("Estimated price: ", estimated_price)
     except (IndexError, ValueError):
         print("Please provide a valid mileage", file=sys.stderr)
